@@ -1,0 +1,205 @@
+﻿//****************************************************************************************
+//FileName:ConstantUtility.cs
+// Description:Has all the constants that has been used.
+// Created By:Madrina Thapa
+//******************************************************************************************
+
+namespace Uploader.Utilities
+{
+    public class ConstantUtility
+    {
+        #region Error messages
+        public const string UserValidationError = "The email or password you entered is incorrect.";
+        public const string SearchError = "We couldn't find any match!";
+        public const string ExistingUserError = "Email Id already exists!";
+        public const string DownloadError = "alert('File could not be downloaded!');";
+        public const string True = "True";
+        public const string False = "False";
+        #endregion
+
+        #region Pages
+        public const string UploadPage = "MyUploadLandingPage.aspx";
+        public const string LoginPage = "Login.aspx";
+        #endregion
+
+        #region MyUploadLandingPage
+        public const string FileBox = "dvFileBox";
+        public const string ThumbImage = "imgThumb";
+        public const string ExtensionBox = "divThumb";
+        public const string Lock = "dvLock";
+        public const string Unlock = "dvUnlock";
+        public const string Main = "maindiv";
+        public const string ThumbName = "ThumbFileName";
+        public const string Exe = "Extension";
+        public const string ExeBackColor = "#e8e8e8";
+        public const string FileStatus = "IsLocked";
+        public const string Ellipsis = "....";
+
+        public struct ExtImage
+        {
+            public const string ASP = "Asp.png";
+            public const string ASPX = "Aspx.png";
+            public const string AUDIO = "Audio.png";
+            public const string CSHARP = "CSharp.png";
+            public const string DOC = "word.png";
+            public const string EXE = "Exe.png";
+            public const string HTML = "Html.png";
+            public const string PDF = "Pdf.png";
+            public const string PPT = "Ppt.png";
+            public const string SQL = "SQL.png";
+            public const string TEXT = "Notepad.png";
+            public const string VIDEO = "Video.png";
+            public const string XML = "Excel.png";
+            public const string Zip = "zip.png";
+        }
+
+        public struct Extensions
+        {
+            public const string ASP = ".asp"; 
+            public const string ASPX = ".aspx";
+            public const string AVI =".avi";
+            public const string CSHARP = ".cs";
+            public const string DOCX = ".docx";
+            public const string DOC = ".doc";
+            public const string EXE = ".exe";
+            public const string FLV = ".flv";
+            public const string HTML = ".html";
+            public const string HTM = ".htm";
+            public const string MP3 = ".mp3";
+            public const string MP4 = ".mp4";
+            public const string MPEG = ".mpeg";
+            public const string MPG = ".mpg";
+            public const string TEXT = ".txt";
+            public const string PDF = ".pdf";
+            public const string PPT = ".ppt";
+            public const string PPTX = ".pptx";
+            public const string SQL = ".sql";
+            public const string WAV = ".wav";
+            public const string WMV = ".wmv";
+            public const string XLS = ".xls";
+            public const string XLSX = ".xlsx";
+            public const string XML = ".xml";
+            public const string Zip = ".zip";
+        }
+        #endregion
+
+        #region Config keys
+
+        public struct ConfigKeys
+        {
+            public const string ThumbImagePath = "ThumbImagePath";
+            public const string ThumbFolder = "ThumbFolder";
+            public const string FolderPath = "FolderPath";
+            public const string ImageExtensions = "ImageExtensions";
+            public const string TempFolder = "TempFolder";
+            public const string FileLife = "FileLife";
+        }
+
+        #endregion
+
+        #region column Names
+
+        public const string Email = "Email";
+        public const string FileId = "FileId";
+        public const string OriginalFileName = "OriginalFileName";
+        public const string UploadedBy = "Uploaded By";
+        public const string UploadedDate = "Uploaded Date";
+        public const string FileSize = "FileSize";
+        public const string Status = "File Status";
+        public const string UserId = "UserId";
+        public const string UserName = "UserName";
+        public const string AllocatedSpace = "AllocatedSpace";
+        public const string UsedSpace = "UsedSpace";
+        public const string FreeSpace = "FreeSpace";
+        public const string UserHashcode = "UserHashCode";
+        public const string IsAdmin = "IsAdmin";
+        public const string SavedFileName = "SavedFileName";
+        public const string IsDeleted = "IsDeleted";
+        public const string FilePassword = "FilePassword";
+        public const string TotalFiles = "TotalFiles";
+        public const string TotalDownloads = "TotalDownloads";
+        public const string TotalSize = "TotalSize";
+        public const string LastLogin = "LastLogin";
+        public const string NewFileName = "NewFileName";
+        public const string IsAdminDelete = "IsAdminDelete";
+
+        #endregion
+
+        #region Operators
+
+        public const string Like = "LIKE";
+        public const string NotLike = "NOT LIKE";
+        public const string Equal = "=";
+        public const string NotEqual = "<>";
+        public const string LessThan = "<";
+        public const string LessThanEqual = "<=";
+        public const string GreaterThan = ">";
+        public const string GreaterThanEqual = ">=";
+
+        #endregion
+
+        #region Stored Procedures
+
+        public struct StoredProcedures
+        {
+            public const string GetUserDetails = "Upload_GetUserDetails";
+            public const string SaveFileDetail = "Upload_SaveFileDetail";
+            public const string GetFileDetails = "Upload_GetFileDetails";
+            public const string DeleteFile = "Upload_DeleteFile";
+            public const string FileDownload = "Upload_FileDownload";
+            public const string FileDownloadLog = "Upload_FileDownloadLog";
+            public const string GetAccountDetails = "Upload_GetAccountDetails";
+            public const string GetAllFilesForAdmin = "Upload_GetAllFilesForAdmin";
+            public const string GetUserByEmail = "Upload_GetUserByEmail";
+            public const string SaveUserDetail = "Upload_SaveUserDetail";
+            public const string ResetPassword = "Upload_ResetPassword";
+            public const string ChangeFileName = "Upload_ChangeFileName";
+            public const string LockFile = "Upload_LockFile";
+            public const string UnlockFile = "Upload_UnlockFile";
+            public const string ChangeFilePassword = "Upload_ChangeFilePassword";
+            public const string GetFilePassword = "Upload_GetFilePassword";
+            public const string GetFileName = "Upload_GetFileName";
+            public const string GetUserDetailsByHashCode = "Upload_GetUserDetailsByHashCode";
+            public const string GetAllUserDetails = "Upload_GetAllUserDetails";
+            public const string UpdateAllocatedSpace = "Upload_UpdateAllocatedSpace";
+            public const string SaveSessionDetails = "Upload_SaveSessionDetails";
+            public const string SaveTinyUrl = "Upload_SaveTinyUrl";
+            public const string GetFileOwnerAndDownloadHistory = "GetFileOwnerAndDownloadHistory";
+        }
+        #endregion
+
+        #region stored procedure parameters
+
+        public struct StoredProcedureParams
+        {
+            public const string Email = "@Email";
+            public const string Password = "@Password";
+            public const string OriginalFileName = "@OriginalFileName";
+            public const string SavedFileName = "@SavedFileName";
+            public const string UserHashCode = "@UserHashCode";
+            public const string MachineName = "@MachineName";
+            public const string IpAddress = "@IpAddress";
+            public const string FileSize = "@FileSize";
+            public const string Extension = "@extension";
+            public const string ThumbFileName = "@thumbFileName";
+            public const string IsAdmin = "@IsAdmin";
+            public const string IsSearchable = "@IsSearchable";
+            public const string SearchTerm = "@SearchTerm";
+            public const string FileId = "@FileId";
+            public const string UserId = "@userId";
+            public const string SearchField = "@searchField";
+            public const string SearchOper = "@searchOper";
+            public const string SearchString = "@searchString";
+            public const string FirstName = "@FirstName";
+            public const string LastName = "@LastName";
+            public const string CurrentPassword = "@CurrentPassword";
+            public const string NewPassword = "@NewPassword";
+            public const string NewFileName = "@newFileName";
+            public const string AllocatedSpace = "@allocatedSpace";
+            public const string SessionData = "@SessionData";
+            public const string TinyUrl = "@TinyUrl";
+        }
+
+        #endregion
+    }
+}

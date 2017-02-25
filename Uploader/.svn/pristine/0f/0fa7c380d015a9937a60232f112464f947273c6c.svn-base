@@ -1,0 +1,271 @@
+﻿.BtnGeneral {
+    background-color: #444345;
+    border-color: #231f20;
+    border-style: solid;
+    border-width: 2px;
+    display: inline-block;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin: 1px;
+    padding: 3px 4px 3px 2px;
+    color: #FFFFFF;
+    width: 120px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.TextBoxGeneral {
+    width: 280px;
+    border-color: #d3d3d3 ;
+    border-style: solid;
+    border-width: 2px;
+    height:28px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.BtnDelete {
+    background-color: #C00000 ;
+    border-color: #B80000 ;
+    border-style: solid;
+    border-width: 2px;
+    display: inline-block;
+    font-family: Arial;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin: 1px;
+    padding: 3px 4px 3px 2px;
+    color: #FFFFFF;
+    width: 60px;
+    font-weight: bold;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+
+.DivFileName {
+    width:300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight:bold;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.dvSideBar {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.Settings {
+    float: left;
+    margin-top: 210px;
+    font-size: 13px;
+    margin-left: -115px;
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.ImageSideBar {
+    float: left;
+    margin-left: 15px;
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+
+
+.popupHeader {
+    background-color: rgb(64, 64, 65);
+    color: White;
+    height: 30px;
+    text-transform: uppercase;
+    width: 280px;
+    font-size:25px;
+    font-weight:bold;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.Holder {
+   /*outline: 1px solid #eaedef;*/
+    /*padding: 40px 40px 20px;*/
+    background-color: #FFF;    
+    margin-top:80px;
+}
+  .ui-widget-header,.ui-state-default, ui-button{
+            background:#444345;
+            border: 1px solid #231f20;
+            color: white;
+            font-weight: bold;
+         }
+
+.ui-button-text {
+    color: white;
+}
+.ui-progressbar-value {
+    background:#72b84c;
+}
+
+#htmlUpldFileUploadControl {
+    overflow: hidden;
+    opacity: 0;
+    position: relative;
+    width: 106px;
+    height: 39px;
+    cursor: pointer;
+}
+
+#dvRegister {
+    background-color: #f5f6e7;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#dvLogin {
+    outline: 1px outset #eaedef;
+    background-color: #F5F6E7;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#lnkLogin {
+     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+#lblProgress {
+    position:absolute;
+    left:40%;
+}
+
+#ProgressBar {
+    width: 60%;
+    height:20px;
+}
+
+#ListViewFile {
+    width: 60%;
+}
+
+.DivGeneral {
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.UserNameLabel {
+    margin-right: 140px;
+    margin-top: 5px;
+    float: right;
+}
+.WrapFree {
+    white-space:nowrap;
+}
+
+.BackGround-color-File {
+    background-color: #F5F6E7;
+    border-radius: 5px;
+}
+
+.BackGround-color-OverView {
+    background-color: #F5F6E7;
+    border-radius: 5px;
+}
+
+.Font-sm-span {
+    font-size: 12px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.Account-Line-Spacing {
+    height : 10px;
+}
+
+.Upload-Line-Spacing {
+    height: 29px;
+}
+
+
+#dvUpload {
+    cursor: pointer;
+    background-image: url('../Image/Upload.png');
+    height: 38px;
+    width: 107px;
+}
+
+#dvUpload:hover {
+background-image:url('../Image/Upload_hover.png') !important; 
+}
+
+#htmlUpldFileUploadControl {
+    cursor: pointer;
+    height: 39px;
+    opacity: 0;
+    overflow: hidden;
+    position: relative;
+    width: 107px;
+}
+
+.Font-File-Upload {
+color: #737b7c;
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+font-size: 140%;
+}
+
+.Upload-Dotted-Border {
+    border: medium dotted #b9e9ff;
+}
+
+.Upload-Line-Spacing-xs {
+    height: 10px;
+}
+
+.highlight {
+    background-color:aliceblue;
+}
+
+.file-box {
+    /*background-position: 50% 50%;*/
+    background-repeat: no-repeat;
+    border: 3px double #ccc;
+    color: #666;
+    height: 62px;
+    margin-left: 10%;
+    /*padding: 12%;*/
+    align-content:center;
+    text-align: center;
+    /*width: 71%;*/
+    width: 60%;
+}
+
+.thumbimage {
+    height: 100%;
+    width: auto;
+    position: relative;
+    margin: auto;
+}
+.extension-info {
+    padding: 17%;
+    height: 40px;
+    background-repeat:no-repeat;
+}
+
+.modal-md {
+    width : 500px;
+}
+
+#spnFileUrlInfo {
+    color:#31708f;
+}
+
+.ui-widget-header {
+    background: url("images/ui-bg_gloss-wave_55_5c9ccc_500x100.png") repeat-x scroll 50% 50% #5c9ccc;
+    border: 1px solid #4297d7;
+    color: #ffffff;
+    font-weight: bold;
+}
+.maindiv {
+    color: red;
+    font-size: larger;
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.dvFile-padding {
+    padding-bottom:29px;
+}
+
+.Position-Absolute {
+    position:absolute;
+}
+

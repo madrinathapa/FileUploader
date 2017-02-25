@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+<configuration>
+  <connectionStrings>
+    <add name="iGroup" providerName="System.Data.SqlClient" connectionString="MZID1EkgBiq5w6FQsxLFtLMDJ9p+1EOkTV9hpxKOV63NV2qMvb33P5CCoH2clakpiphMaiez0L7G3ahw5qlohALnehN/RuOtnzNaXzr3Ueh1ae+acLvtXA=="/>
+  </connectionStrings>
+  <appSettings>
+    <add key="FolderPath" value="YwAzfviVDDI="/>
+    <add key="TempFolder" value="VPfoV7UwOd/bKDHV6LWqpg=="/>
+    <add key="ErrorLogPath" value="kWa6xmpLpb+QdFY6xiJO6g=="/>
+    <add key="ImageExtensions" value=".jpg,.tif,.png,.bmp"></add>
+    <add key="ThumbImagePath" value="5BRi7DCzNrLWPcT3YKShm63psgP3yegs52FmlTRz74U/hm5yZR3NxRa8RsQ1FmrP5kRRCQgUDmk="/>
+   <add key ="ThumbFolder" value="IbWm0XKkv8c="/>
+  </appSettings>
+  <system.webServer>
+    <validation validateIntegratedModeConfiguration="false"/>
+    <handlers>
+      <add name="CaptchaImage" verb="GET" path="CaptchaImage.axd" type="MSCaptcha.CaptchaImageHandler, MSCaptcha"/>
+    </handlers>
+  </system.webServer>
+  <system.web>
+    <compilation debug="true" targetFramework="4.0"/>
+    <httpRuntime maxRequestLength="1048576"/>
+    <httpHandlers>
+      <add verb="GET" path="CaptchaImage.axd" type="MSCaptcha.CaptchaImageHandler, MSCaptcha"/>
+    </httpHandlers>
+    <pages buffer="true"
+        masterPageFile="~/Site.master"
+        enableEventValidation="false">
+    </pages>
+  </system.web>
+  
+  <system.serviceModel>
+    <behaviors>
+      <endpointBehaviors>
+        <behavior name="IgroupUploader.IgroupUploaderServiceAspNetAjaxBehavior">
+          <enableWebScript />
+        </behavior>
+      </endpointBehaviors>
+    </behaviors>
+    <serviceHostingEnvironment aspNetCompatibilityEnabled="true"
+      multipleSiteBindingsEnabled="true" />
+    <services>
+      <service name="IgroupUploader.IgroupUploaderService">
+        <endpoint address="" behaviorConfiguration="IgroupUploader.IgroupUploaderServiceAspNetAjaxBehavior"
+          binding="webHttpBinding" contract="IgroupUploader.IgroupUploaderService" />
+      </service>
+    </services>
+  </system.serviceModel>
+</configuration>

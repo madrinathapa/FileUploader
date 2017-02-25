@@ -1,0 +1,210 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="Uploader.Site" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link id="Link1" runat="server" rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link id="Link2" runat="server" rel="icon" href="favicon.ico" type="image/ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <script src="Scripts/jquery-2.1.1.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src='<%: ResolveClientUrl("~/signalr/hubs") %>'></script>
+    <link href="Content/bootstrap-notify.css" rel="stylesheet" />
+
+    <script src="Scripts/Notification.js"></script>
+    <script src="Style/dist/js/bootstrap.js"></script>
+    <script src="Scripts/UploadFile.js"></script>
+    <link href="Style/IgroupMaster.css" rel="stylesheet" />
+    <link href="Style/Common.css" rel="stylesheet" />
+    <link href="Style/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="Scripts/bootstrap-notify.js"></script>
+    <link href="Content/styles/alert-bangtidy.css" rel="stylesheet" />
+    <title>File Uploader</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <%--                    <button  id= "btnNotification" aria-controls="navbar" aria-expanded="false" data-target="#navbarMobileNotification" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                        <span class="sr-only">Notification</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>--%>
+                    <button aria-controls="navbar" aria-expanded="false" data-target="#navbarHeader" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <div class="" id="navbarNotification">
+                        <ul id="nav">
+                            
+                              <li id="notification_li">
+                                  <span id="notification_count">0</span>
+                                  <a href="#" id="notificationLink">Notifications</a>
+                                  
+                                  <div id="notificationContainer">
+                                  <div id="notificationTitle">Notifications</div>
+                                 <div id="notificationsBody" >
+                                     <ul>
+                                         <li>test1</li>
+                                         <li>test1</li>
+                                         <li>test1</li>
+                                     </ul>
+                                 </div>
+                                 <div id="notificationFooter"><a href="#">See All</a></div>
+                                  </div>
+                              </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <a href="MyUploadLandingPage.aspx" title="">
+                            <img src="~/Image/Logo.png" style="padding-top: 3px; height: 45px;" runat="server" /></a>
+                    </div>
+                </div>
+
+                <div class="navbar-collapse collapse" id="navbarHeader">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="MyUploadLandingPage.aspx">Home</a></li>
+                        <% if (this.CurrentUser != null && this.CurrentUser.IsAdmin.Equals(1))
+                           {%>
+                        <li><a href="Admin.aspx">Show All Files</a></li>
+                        <li><a href="RegisteredUsers.aspx">Show All Users</a></li>
+                        <%} %>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active"></li>
+
+
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <asp:Label ID="lblUserName" runat="server" Text="User Name"> </asp:Label><span class="caret"></span></a>
+                            <ul role="menu" class="dropdown-menu">
+
+                                <li class="success">
+                                    <button data-target="#dvUserPasswordChange" data-toggle="modal" class="btn btn-link" type="button" id="btnResetPassword12">
+                                        Reset Password
+                                    </button>
+                                </li>
+                                <li class="success">
+                                    <asp:Button ID="btnLogOut" CssClass="btn btn-link" CausesValidation="false" runat="server" Text="Logout" OnClick="btnLogOut_Click"></asp:Button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <div class="container-fluid" style="margin-top: 6%;">
+            <div class="row">
+                <div class="col-md-1" style="width: 9.333%;"></div>
+                <div class="col-sm-3 col-md-2">
+                    <div class="row dvSideBar">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <div class="row table-bordered BackGround-color-OverView Font-sm-span hidden-xs hidden-sm">
+                                <div class="col-md-12">
+                                    <h4>Your Account: </h4>
+                                </div>
+                                <div class="col-md-12 Account-Line-Spacing"></div>
+                                <div class="col-md-3">
+                                    <asp:Image runat="server" ID="imgFiles" Height="20px" Width="20px" ImageUrl="Image/Files.png" ToolTip="files"></asp:Image>
+                                </div>
+                                <div class="col-md-9">
+                                    <asp:Label ID="lblFiles" runat="server" Text=" files"></asp:Label>
+                                </div>
+                                <div class="col-md-12 Account-Line-Spacing"></div>
+                                <div class="col-md-3">
+                                    <asp:Image runat="server" ID="imgTotalDownloads" ImageUrl="Image/DownloadCount.png" ToolTip="Total downloads"></asp:Image>
+                                </div>
+                                <div class="col-md-9">
+                                    <asp:Label ID="lblTotalDownloads" runat="server" Text=" downloads" CssClass="WrapFree"></asp:Label>
+                                </div>
+                                <div class="col-md-12 Account-Line-Spacing"></div>
+                                <div class="col-md-3">
+                                    <asp:Image runat="server" ID="imgTotalSize" ImageUrl="Image/Size.png" ToolTip="Total size"></asp:Image>
+                                </div>
+                                <div class="col-md-9">
+                                    <asp:Label ID="lblTotalSize" runat="server" Text=" MB" CssClass="WrapFree"></asp:Label>
+                                </div>
+                                <div class="col-md-12 Account-Line-Spacing"></div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12 Account-Line-Spacing"></div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9" id="dvProgressDesc" style="visibility: hidden;">Progress:</div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <div class="progress" id="dvProgressBarParent" style="visibility: hidden;">
+                                <div id="dvProgressBar" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                    0%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1" style="width: 1%;"></div>
+                <div class="col-sm-9 col-md-8">
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal fade" id="dvUserPasswordChange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Reset Password</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="recipient-name" class="control-label">Current Password</label>
+                                <input type="password" class="form-control" id="txtCurrentPassword" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="control-label">New Password</label>
+                                <input type="password" class="form-control" id="txtnewPassword" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="control-label">Re-enter Password</label>
+                                <input type="password" class="form-control" id="txtReEnterPassword" placeholder="Password">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+
+                        <div id="dvAlert" class="alert alert-danger" hidden="hidden">
+                            <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign"></span>
+                            <span id="spnAlert">Password changed successfully!</span>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btnResetPasswordInModal">Reset Password</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <label for="recipient-name" class="control-label"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Upload-Line-Spacing"></div>
+        <asp:HiddenField ID="hdnUserHashCode" runat="server" />
+
+    </form>
+    <!--<div class="footer">© copyright 2015</div>-->
+    <div class='notifications top-right' style="top: 70%; width: 30%;"></div>
+    <!-- Modal -->
+
+</body>
+</html>
+

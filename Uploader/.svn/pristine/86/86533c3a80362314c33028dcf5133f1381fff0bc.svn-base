@@ -1,0 +1,39 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="MyListViewTest.aspx.cs" Inherits="IgroupUploader.MyListViewTest" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+     <asp:ListView ID="lvFile" runat="server" OnItemCommand="lvFile_ItemCommand" GroupItemCount="2" GroupPlaceholderID="groupPlaceholder">
+        <LayoutTemplate>
+        <table>
+            <tr>
+                <td runat="server" id="groupPlaceholder"></td>
+            </tr>
+          </table>
+        </div>
+        </LayoutTemplate>
+
+        <GroupTemplate>
+            <tr>
+            <asp:PlaceHolder runat="server" ID="itemPlaceholder"></asp:PlaceHolder>
+            </tr>
+        </GroupTemplate>
+        <GroupSeparatorTemplate>
+           <tr><td style="height:23px;"></td></tr>
+        </GroupSeparatorTemplate>
+        <ItemTemplate>
+            <td>
+                <asp:LinkButton ID="LinkButton1" CommandName="Delete" runat="server" Text='<%#Eval("OriginalFileName")  %>' >LinkButton</asp:LinkButton>
+              </td> 
+        </ItemTemplate>
+    </asp:ListView>
+    </div>
+    </form>
+</body>
+</html>

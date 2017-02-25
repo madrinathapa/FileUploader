@@ -1,0 +1,22 @@
+﻿//--------------------------------------------------------------------------------
+// FileName:UploadFile.cs
+// Description:An entity class for the file details.
+// Created By:Madrina Thapa.
+//--------------------------------------------------------------------------------
+
+
+namespace Uploader.Entities
+{
+    public class UploadedFile
+    {
+        public bool IsDeleted { get; set; }
+        public bool IsAdminDeleted { get; set; }
+        public bool IsLocked { get; set; }
+        public string FilePassword { get; set; }
+        public string OriginalFileName { get; set; }
+        public string SavedFileName { get; set; }
+        public string NewFileName { get; set; }
+        public string ThumbName { get; set; }
+        public string Extension { get; set; }
+    }
+}

@@ -1,0 +1,114 @@
+﻿using IgroupUploader.Data;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace IgroupUploader
+{
+    public partial class MyListViewTest : System.Web.UI.Page
+    {
+        public string UserHashCode
+        {
+            get
+            {
+                if (Session["UserHashCode"] != null &&
+                   !Convert.ToString(Session["UserHashCode"]).Equals(string.Empty))
+                {
+                    return Convert.ToString(Session["UserHashCode"]);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+
+            }
+        }
+
+        public string UserName
+        {
+            get
+            {
+                if (Session["UserName"] != null &&
+                   !Convert.ToString(Session["UserName"]).Equals(string.Empty))
+                {
+                    return Convert.ToString(Session["UserName"]);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+
+            }
+        }
+        public string Email
+        {
+            get
+            {
+                if (Session["Email"] != null &&
+                   !Convert.ToString(Session["Email"]).Equals(string.Empty))
+                {
+                    return Convert.ToString(Session["Email"]);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+
+            }
+            set { }
+        }
+        public int IsAdmin
+        {
+            get
+            {
+                if (Session["IsAdmin"] != null && Convert.ToBoolean(Session["IsAdmin"]))
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+
+            }
+        }
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                if (!string.IsNullOrEmpty(this.UserHashCode) && !string.IsNullOrEmpty(this.Email)
+                    && !string.IsNullOrEmpty(this.UserName))
+                {
+                    GetFileList();
+                }
+
+            }
+
+        }
+
+        public void GetFileList()
+        {
+            DataTable dtFile = new DataTable();
+            DataAccessLayer ObjData = new DataAccessLayer();
+
+            //Get all the files uploaded by the logged in user.
+            dtFile = ObjData.GetAllFiles(UserHashCode, this.IsAdmin);
+            //Bind it to the listview.
+            lvFile.DataSource = dtFile;
+            lvFile.DataBind();
+        }
+
+        protected void lvFile_ItemCommand(object sender, ListViewCommandEventArgs e)
+        {
+            if (e.CommandName.Equals("Delete"))
+            {
+                
+            }
+            
+        }
+    }
+}

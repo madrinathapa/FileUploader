@@ -1,0 +1,721 @@
+﻿var selectedFiles;
+var filePwd;
+var divDelete;
+
+$(document).ready(function () {
+    if (window.addEventListener) {
+        window.addEventListener("dragover", function (e) {
+            e = e || event;
+            e.preventDefault();
+        }, false);
+        window.addEventListener("drop", function (e) {
+            e = e || event;
+            e.preventDefault();
+        }, false);
+    } else {
+        window.attachEvent("dragover", function (e) {
+            e = e || event;
+            e.preventDefault();
+        }, false);
+        window.attachEvent("drop", function (e) {
+            e = e || event;
+            e.preventDefault();
+        }, false);
+    }
+
+    function OnDragEnter(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    function OnDragOver(e) {
+        if (window.location.href.indexOf("MyUploadLandingPage.aspx") > 0) {
+            $("body").css({ 'opacity': 0.1 });
+            $("body").css({ 'background-color': '#476C91' });
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        
+    }
+
+    function OnDrop(e) {
+        if (window.location.href.indexOf("MyUploadLandingPage.aspx") > 0) {
+            $("body").css({ 'background-color': '' });
+            $("body").css({ 'opacity': 1 });
+            e.stopPropagation();
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var dt = e.dataTransfer;
+            selectedFiles = (e.files || dt.files);
+            if (selectedFiles.length > 0) {
+                UploadFilesToServer();
+            }
+        }
+        
+    }
+
+    var box;
+    box = document.body;
+    if (box.addEventListener) {
+        box.addEventListener("dragenter", OnDragEnter, false);
+        box.addEventListener("dragover", OnDragOver, false);
+        box.addEventListener("drop", OnDrop, false);
+    }
+    else {
+        box.attachEvent("dragenter", OnDragEnter, false);
+        box.attachEvent("dragover", OnDragOver, false);
+        box.attachEvent("drop", OnDrop, false);
+    }
+    
+});
+
+function ProgressbarUpdate(val)
+{
+    document.getElementById("dvProgressBar").style.width = val + "%";
+    $('#dvProgressBar').html(val + "%");
+}
+
+
+//Used for hide and visible Progress bar in master page.
+function VisibleHideProgressDiv(val) {
+    document.getElementById("dvProgressBarParent").style.visibility = val;
+    document.getElementById("dvProgressDesc").style.visibility = val;
+}
+
+//Used to upload the selected files
+function UploadFilesToServer() {
+    VisibleHideProgressDiv("visible");
+    var formdata = new FormData(); //FormData object
+
+    for (var i = 0; i < selectedFiles.length; i++) {
+        formdata.append(selectedFiles[i].name, selectedFiles[i]);
+    }
+    
+    //Creating an XMLHttpRequest and sending
+    var xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener("progress", function (evt) {
+        if (evt.lengthComputable) {
+            var progress = Math.round(evt.loaded * 100 / evt.total);
+            ProgressbarUpdate(progress);
+        }
+    }, false);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            VisibleHideProgressDiv("hidden");
+            //Reload the page.
+            window.location.href = window.location.href;
+        }
+
+        
+    }
+
+    //Call the handler to upload file
+    xhr.open('POST', 'FileUploadHandler.ashx');
+    xhr.send(formdata);
+
+}
+
+
+//Opne a pop up having the url to the selected file.
+function OpenPopUp(Url) {
+        $("#txtFileUrl").val(Url);
+        $("#dvModalGetUrl").modal('show');
+}
+
+$(document).ready(function () {
+
+    var chromeBrowser = navigator.userAgent.toLocaleLowerCase();
+
+    if (chromeBrowser.indexOf("chrome") > 0)
+    {
+        RestrictSpaceAndAngularBracketChrome();
+
+    }
+    else {
+        RestrictSpaceAndAngularBracketGeneric();
+    }
+
+    //To prevent pasting in the password field
+    $("input[type = 'password']").bind("paste", function (e) {
+        e.preventDefault();
+    });
+
+    //Image drag is disabled on the mouse down
+    $('img').on("mousedown", function () { return false; });
+    
+    $("#txtFileUrl").on("click", function (e) {
+        $(this).select();
+        e.preventDefault();
+    });
+
+    $(".file-box").on("click", function () {
+        $(this).closest('.table-bordered').toggleClass("highlight");
+        ToggleButton();
+    });
+
+    //This piece of code will be executed on the reset button click.
+    $("#btnResetPasswordInModal").on('click', function (e) {
+        e.stopImmediatePropagation();
+        var currentPassword = $("#txtCurrentPassword").val();
+        var newPassword = $("#txtnewPassword").val();
+        var reEnterPassword = $("#txtReEnterPassword").val();
+        var userHashCode = $("#hdnUserHashCode").val();
+
+        if (newPassword != "" && currentPassword !== "" && reEnterPassword != "") {
+            if (newPassword == reEnterPassword && newPassword != currentPassword) {
+                var srvUrl = "UploaderService.svc/ResetPassword";
+                $.ajax({
+                    type: "POST",
+                    url: srvUrl,
+                    data: '{"currentPassword":"' + currentPassword + '","newPassword":"' + newPassword + '","userHashCode":"' + userHashCode + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    cache: false,
+                    async: true,
+                    success: function (msg) {
+                        if (msg.d == true) {
+                            ClearResetPassword();
+                            $("#spnAlert").text("Password changed successfully!");
+                            $("#dvAlert").removeClass("alert-danger");
+                            $("#dvAlert").addClass("alert-success");
+                            $("#dvAlert").show();
+                            setTimeout(function () { $('#dvUserPasswordChange').modal('hide'); }, 4000);
+                        }
+                        else {
+                            $("#spnAlert").text("Enter correct password!");
+                            $("#dvAlert").show();
+                        }
+                        ClearResetPassword();
+                    }
+                });
+            }
+            else {
+                if (newPassword == currentPassword)
+                {
+                    $("#spnAlert").text("The old and new password should not be same!");
+                    $("#dvAlert").show();
+                    ClearResetPassword();
+                }
+                if (newPassword != reEnterPassword) {
+                    $("#spnAlert").text("Passwords did not match!");
+                    $("#dvAlert").show();
+                    ClearResetPassword();
+                }
+                
+            }
+        }
+        else {
+            ClearResetPassword();
+            $("#spnAlert").text('Please enter password.');
+            $("#dvAlert").show();
+        }
+    });
+
+    $("#modalChangeFilePwd").on('shown.bs.modal', function () {
+        $("#txtExistingPassword").focus();
+    });
+
+    $('#dvUserPasswordChange').on('shown.bs.modal', function () {
+        $("#txtCurrentPassword").focus();
+    })
+    $("#btnChangeFilePwd").on('click', function (e) {
+        e.stopImmediatePropagation();
+        var newFilePassword = $("#txtNewFilePassword").val();
+        var oldFilePassword = $("#txtExistingPassword").val();
+        var fileId = $("#ContentPlaceHolder1_hdnFileId").val();
+       
+        if (oldFilePassword != "" && newFilePassword != "") {
+            // if (oldFilePassword == filePwd) {
+            var srvUrl = "UploaderService.svc/ChangeFilePassword"
+            $.ajax({
+                type: "POST",
+                url: srvUrl,
+                data: '{"newPassword":"' + newFilePassword + '","oldPassword":"' + oldFilePassword + '", "filePassword":"' + filePwd + '","fileId":"' + fileId + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                async: true,
+                success: function (msg) {
+                    if (msg.d == true) {
+                        $("#txtNewFilePassword").val("");
+                        $("#txtExistingPassword").val("");
+                        $("#spnChangePwd").text("Password changed successfully!");
+                        $("#dvChangePwd").removeClass("alert-danger");
+                        $("#dvChangePwd").addClass("alert-success");
+                        $("#dvChangePwd").show();
+                        setTimeout(function () { $('#modalChangeFilePwd').modal('hide'); }, 4000);
+                    }
+                    else {
+                        $("#spnChangePwd").text("Some error occurred!");
+                        $("#dvChangePwd").show();
+                        $("#txtNewFilePassword").val("");
+                        $("#txtExistingPassword").val("");
+                        setTimeout(function () { $('#modalChangeFilePwd').modal('hide'); }, 4000);
+                    }
+                }
+            });
+        }
+        else {
+            $("#spnChangePwd").text("Enter the password!");
+            $("#dvChangePwd").show();
+            $("#txtNewFilePassword").val("");
+            $("#txtExistingPassword").val("");
+        }
+    });
+
+    $("#btnLockFile").on('click', function (e) {
+        e.stopImmediatePropagation();
+        var filePassword = $("#txtFilePassword").val();
+        var fileId = $("#ContentPlaceHolder1_hdnFileId").val();
+        if (filePassword != "") {
+            var srvUrl = "UploaderService.svc/LockFile"
+            $.ajax({
+                type: "POST",
+                url: srvUrl,
+                data: '{"filePassword":"' + filePassword + '","fileId":"' + fileId + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                async: true,
+                success: function (msg) {
+                    if (msg.d == true) {
+                        $("#txtFilePassword").val("");
+                        $("#spnLockFile").text("Password set successfully!");
+                        $("#dvLockFile").removeClass("alert-danger");
+                        $("#dvLockFile").addClass("alert-success");
+                        $("#dvLockFile").show();
+                        setTimeout(function () { $('#modalLockFile').modal('hide'); }, 400);
+                        window.location.href = window.location.href;
+                    }
+                    else {
+                        $("#spnLockFile").text("Some error occurred!");
+                        $("#dvLockFile").show();
+                    }
+                    $("#txtFilePassword").val("");
+                }
+            });
+        }
+        else {
+            $("#spnLockFile").text("Enter the password!");
+            $("#dvLockFile").show();
+            $("#txtFilePassword").val("");
+        }
+    });
+
+    $("#btnDeleteFile").on('click', function (e) {
+        e.stopImmediatePropagation();
+        var fileId = $("#ContentPlaceHolder1_hdnFileId").val();
+        if (fileId != "") {
+            var srvUrl = "UploaderService.svc/RemoveFile"
+            $.ajax({
+                type: "POST",
+                url: srvUrl,
+                data: '{"fileId":"' + fileId + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                async: true,
+                success: function (msg) {
+                    if (msg.d == true) {
+                        setTimeout(function () { $('#dvModalDeleteFile').modal('hide'); }, 100);
+                        var myElement = divDelete.parentNode.parentElement;
+                        $(myElement).parent().next().remove();
+                        $(myElement).parent().remove();
+                        DecreaseFileCount();
+                    }
+                    else {
+                        $("#spnDeleteInfo").text("Some error occurred!");
+                        $("#dvDeleteInfo").show();
+                    }
+                }
+            });
+        }
+        else {
+            $("#spnDeleteInfo").text("Some error occurred!");
+            $("#dvDeleteInfo").show();
+        }
+    });
+
+    //This piece of code will be executed by changing of selected file.
+    //This will be called when we select a file into the htmlUpldFileUploadControl control 
+    jQuery("input#htmlUpldFileUploadControl").change(function () {
+        var selectedFile;
+        if (this.value != "") {
+
+            if (this.value.length > 19) {
+                selectedFile = this.value.substr(0, 19) + '...';
+            }
+            else {
+                selectedFile = this.value;
+            }
+            $("#spnAlertFileInput").css("visibility", "visible");
+            $("#spnAlertFileInput").text(selectedFile);
+        }
+
+        if ($("#htmlUpldFileUploadControl").get(0).files.length != 0) {
+            VisibleHideProgressDiv("visible");
+            selectedFiles = $("#htmlUpldFileUploadControl").get(0).files;
+            UploadFilesToServer();
+        }
+    });
+
+    //Called when the modal will be closed.
+    $('#dvUserPasswordChange').on('hidden.bs.modal', function () {
+        $("#dvAlert").hide();
+    })
+
+    $("#modalLockFile").on('shown.bs.modal', function (e) {
+        $("#txtFilePassword").focus();
+       
+    });
+
+    $("#btnDelete").on('click', function () {
+        var index;
+        var selectedDivs = $("[class*='highlight']").find('.fileId');
+        var selectedIds = [];
+        for (index = 0; index < selectedDivs.length; index++) {
+            selectedIds[index] = $("[class*='highlight']").find('.fileId')[index].innerText;
+        }
+        if (selectedIds.length != 0) {
+            $.ajax({
+                type: "POST",
+                url: 'UploaderService.svc/DeleteFiles',
+                data: '{"selectedRows":"' + selectedIds.toString() + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                async: false,
+                success: function () {
+                    var elements = $("[class*='highlight']").find('.fileId').closest('div');
+                    window.location.href = window.location.href;
+                }
+            });
+        }
+    });
+});
+
+
+//Clear the text from the text boxes inside the reset password div
+function ClearResetPassword() {
+    $("#txtCurrentPassword").val("");
+    $("#txtnewPassword").val("");
+    $("#txtReEnterPassword").val("");
+}
+
+//Get the file URL
+function GenerateUrl(obj) {
+    var nextElement = $(obj).next();
+    var url = nextElement.val();
+    OpenPopUp(url);
+    return false;
+}
+
+function ChangeFileName(fileId, newName, editId) {
+    $("#ContentPlaceHolder1_hdnFileId").val(fileId);
+    var divHtml;
+
+    var srvUrl = "UploaderService.svc/GetFileName"
+    $.ajax({
+        type: "POST",
+        url: srvUrl,
+        data: '{"fileId":"' + fileId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        async: false,
+        success: function (msg) {
+            if (msg.d != null) {
+                divHtml = HtmlDecode(msg.d);
+            }
+        }
+    });
+    var editableText = $('<input type="text" class="Position-Absolute">');
+    editableText.val(divHtml);
+    var dvName = $(editId).parent().next();
+
+    //Remove the onclick attribute from the file name div
+    $(dvName).removeAttr("onclick");
+    $(dvName).html(editableText)
+    editableText.focus();
+
+    //Setup the blur event
+    $(editableText).blur(function () {
+        editableTextSaved(editableText);
+    });
+   
+    //When enter key is pressed
+   editableText.on("keydown", function (e) {
+        if (e.keyCode == 13) {
+            editableTextSaved(editableText);
+        }
+    });
+}
+
+function editableTextSaved(item) {
+    var html = $(item).val();
+    var newName = (html.length > 24) ? html.substr(0, 16) + '....' + html.split('.').pop() : html;
+    html = HtmlEncode(html);
+    newName = HtmlEncode(newName);
+    var viewableText = $("<div onclick='DownLoadFile(this);' class='col-md-6 col-xs-10 col-sm-10 WrapFree FileName'>");
+    viewableText.html(newName);
+    $(item).parent().replaceWith(viewableText);
+    ChangeFileTitle(html);
+}
+
+function ChangeFileTitle(newTitle) {
+    var fileId = $("#ContentPlaceHolder1_hdnFileId").val();
+    if (newTitle != "") {
+        var srvUrl = "UploaderService.svc/ChangeName"
+        $.ajax({
+            type: "POST",
+            url: srvUrl,
+            data: '{"newFileName":"' + newTitle + '","fileId":"' + fileId + '"}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            cache: false,
+            async: true,
+            success: function (msg) {
+                if (msg.d == true) {
+                }
+                else {
+                    window.location.href = window.location.href;
+                }
+            }
+        });
+    }
+}
+
+function LockFile(FileId) {
+    $("#ContentPlaceHolder1_hdnFileId").val(FileId);
+
+        $('#modalLockFile').modal('show');
+}
+
+function ViewPassword(fileId) {
+    var srvUrl = "UploaderService.svc/ViewPassword";
+    $.ajax({
+        type: "POST",
+        url: srvUrl,
+        data: '{"fileId":"' + fileId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        async: true,
+        success: function (msg) {
+            if (msg.d != null) {
+                $("#lblModalGetUrl").text("File Password");
+                $("#head").text("File Password");
+                $("#spnFileUrlInfo").text("Copy the password");
+                OpenPopUp(msg.d);
+            }
+        }
+    });
+}
+
+function UnlockFile(fileId) {
+    var srvUrl = "UploaderService.svc/UnlockFile";
+    $.ajax({
+        type: "POST",
+        url: srvUrl,
+        data: '{"fileId":"' + fileId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        async: true,
+        success: function () {
+            window.location.href = window.location.href;
+        }
+    });
+}
+
+function ChangePassword(fileId, filePassword) {
+    $("#ContentPlaceHolder1_hdnFileId").val(fileId);
+    $("#ContentPlaceHolder1_hdnFilePassword").val(filePassword);
+    
+    filePwd = filePassword;
+    $('#modalChangeFilePwd').modal('show');
+}
+
+function DeleteFile(fileId, dvDelete) {
+    $("#ContentPlaceHolder1_hdnFileId").val(fileId);
+    divDelete = dvDelete;
+    $('#dvModalDeleteFile').modal('show');
+}
+
+function HtmlEncode(value){
+    if (value) {
+        return jQuery('<div />').text(value).html();
+    } else {
+        return '';
+    }
+}
+
+function HtmlDecode(value) {
+    if (value) {
+        return $('<div />').html(value).text();
+    } else {
+        return '';
+    }
+}
+
+function RestrictSpaceAndAngularBracketChrome() {
+    //To Prevent typing spaces in the password field.
+    $("#txtFilePassword").keypress(function (e) {
+        if (e.keyCode == 32 || e.keyCode == 60 || e.keyCode == 62) {
+            return false;
+        }
+
+        if (e.keyCode == 13) {
+            $("#btnLockFile").click();
+            e.preventDefault();
+        }
+    });
+
+    //Enter text in the search text box and hit the enter button
+    //the search button will be clicked by default.
+    $("#ContentPlaceHolder1_txtSearchFileMain").on("keydown", function (e) {
+        if (e.keyCode == 13) {
+            $("#ContentPlaceHolder1_btnSearchFiles").click();
+            e.preventDefault();
+        }
+
+        if (e.keyCode == 60 || e.keyCode == 62) {
+            return false;
+        }
+
+    });
+
+
+    $("#dvUserPasswordChange :password").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            $("#btnResetPasswordInModal").click();
+            e.preventDefault();
+        }
+
+        if (e.keyCode == 32 || e.keyCode == 60 || e.keyCode == 62) {
+            return false;
+        }
+
+    });
+}
+
+function RestrictSpaceAndAngularBracketGeneric()
+{
+    //To Prevent typing spaces in the password field.
+    $("#txtFilePassword").keypress(function (e) {
+        if (e.key == "<" || e.key == ">" || e.key == " ") {
+            return false;
+        }
+
+        if (e.keyCode == 13) {
+            $("#btnLockFile").click();
+            e.preventDefault();
+        }
+    });
+
+    //Enter text in the search text box and hit the enter button
+    //the search button will be clicked by default.
+    $("#ContentPlaceHolder1_txtSearchFileMain").on("keydown", function (e) {
+        if (e.keyCode == 13) {
+            $("#ContentPlaceHolder1_btnSearchFiles").click();
+            e.preventDefault();
+        }
+
+        if (e.key == "<" || e.key == ">") {
+            return false;
+        }
+
+    });
+
+
+    $("#dvUserPasswordChange :password").on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            $("#btnResetPasswordInModal").click();
+            e.preventDefault();
+        }
+        if (e.shiftKey && e.key == "<") {
+            return false;
+        }
+        if (e.key == "<" || e.key == ">" || e.key == " ") {
+            return false;
+        }
+
+    });
+}
+
+function ToggleButton() {
+    var selectedDiv = $("[class*='highlight']").find('.fileId');
+    if (selectedDiv.length != 0) {
+        $("#btnDelete").css("display", "block");
+    }
+    else {
+        $("#btnDelete").css("display", "none");
+    }
+}
+
+function UpdateDownloadLog(obj)
+{
+    //Increase the total Download count
+    var downloadString = $("#lblTotalDownloads").text();
+    var currentDownloadCount = downloadString.substring(0, downloadString.length - 10);
+    var intCount = parseInt(currentDownloadCount) || 0;
+    if (intCount != 0) {
+        var nenewCount = intCount + 1;
+        $("#lblTotalDownloads").text(nenewCount + " downloads");
+    }
+   
+
+    //Increase the individual count
+    var downloadCountSpan = $(obj).parent().parent().find("span.spnDownloadCount");
+    var currentIndividualDownloadCount = $(downloadCountSpan).text();
+    intCount = parseInt(currentIndividualDownloadCount) || 0;
+    newCount = intCount + 1;
+    $(downloadCountSpan).text(newCount);
+    return true;
+}
+function DecreaseFileCount()
+{
+    var downloadString = $("#lblFiles").text();
+    var currentDownloadCount = downloadString.substring(0, downloadString.length - 6);
+    var intCount = parseInt(currentDownloadCount) || 0;
+    if (intCount != 0) {
+        var nenewCount = intCount - 1;
+        $("#lblFiles").text(nenewCount + " downloads");
+    }
+}
+
+function SaveTinyUrl()
+{
+    var fileId = $("#ContentPlaceHolder1_hdnFileIdTinyUrl").val();
+    var srvUrl = "UploaderService.svc/SaveTinyUrl";
+    $.ajax({
+        type: "POST",
+        url: srvUrl,
+        data: '{"fileId":"' + fileId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        async: true,
+        success: function (msg) {
+            if (msg.d != null) {
+                $("#ContentPlaceHolder1_lvFile_ctrl0_hdnFileUrl_0").val(msg.d);
+            }
+        }
+    });
+}
+
+//This is used to click the download image 
+//And upon the image click, the file will be downloaded
+function DownloadFile(obj)
+{
+    var parent = $(obj).parent();
+    
+    if (typeof parent !== "undefined") {
+        var downloadImage = $(parent).find($("input[id*='imgBtnFileDownload']"));
+
+        if (typeof downloadImage !== "undefined") {
+            $(downloadImage).click();
+        }
+    }
+   
+}
